@@ -51,4 +51,7 @@ alias gds="git diff --staged"
 alias gl='git log --all --decorate --graph --pretty=format:"%C(yellow)%h%Creset %C(auto)%d%Creset %Cblue%ar%Creset %Cred%an%Creset %n%w(72,1,2)%s"'
 
 
-alias m="matlab -nodesktop"
+alias m="matlab -nodesktop -nosplash"
+export PATH=~/.composer/vendor/bin:$PATH
+export PATH="/usr/local/MATLAB/MATLAB_Production_Server/R2015a/bin:$PATH"
+export PATH="$HOME/bin:$PATH"
