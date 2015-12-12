@@ -47,6 +47,7 @@ alias gc="git commit -m"
 alias gp="git push"
 alias gs="git status"
 alias gd="git diff"
+alias gds="git diff --staged"
 alias gl='git log --all --decorate --graph --pretty=format:"%C(yellow)%h%Creset %C(auto)%d%Creset %Cblue%ar%Creset %Cred%an%Creset %n%w(72,1,2)%s"'
 
 
