@@ -69,9 +69,56 @@ prompt_context() {
   fi
 }
 
+is_bisecting() {
+  # return 1;
+  local repo_path
+  [[ -n $1 ]] && repo_path=$1
+  if [[ -e "${repo_path}/BISECT_LOG" ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+is_merging() {
+  local repo_path
+  [[ -n $1 ]] && repo_path=$1
+  if [[ -e "${repo_path}/MERGE_HEAD" ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+is_rebasing() {
+  local repo_path
+  [[ -n $1 ]] && repo_path=$1
+  if [[ -e "${repo_path}/rebase"
+        || -e "${repo_path}/rebase-apply"
+        || -e "${repo_path}/rebase-merge"
+        || -e "${repo_path}/../.dotest"
+      ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+# Add bisecting, merge and rebase mode indicators
+prompt_git_modes() {
+  local mode repo_path
+  repo_path=$(git rev-parse --git-dir 2>/dev/null)
+
+  mode=()
+  is_bisecting $repo_path && mode+="%{%F{green}%}[BISECT]"
+  is_merging $repo_path && mode+="%{%F{red}%}[MERGE]"
+  is_rebasing $repo_path && mode+="%{%F{red}%}[REBASE]"
+  [[ -n "$mode" ]] && prompt_segment black default "$mode"
+}
+
 # Git: branch/detached head, dirty status
 prompt_git() {
-  local ref dirty mode repo_path
+  local ref dirty
   if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
     ZSH_THEME_GIT_PROMPT_DIRTY=" ✗"
     dirty=$(parse_git_dirty)
@@ -83,18 +130,7 @@ prompt_git() {
     fi
     echo -n "${ref/refs\/heads\// }$dirty"
 
-    repo_path=$(git rev-parse --git-dir 2>/dev/null)
-    if [[ -e "${repo_path}/BISECT_LOG" ]]; then
-      mode="[BISECT]"
-      prompt_segment black green
-    elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
-      mode="[MERGE]"
-      prompt_segment black red
-    elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
-      mode="[REBASE]"
-      prompt_segment black red
-    fi
-    echo -n "${mode}"
+    prompt_git_modes
   fi
 }
 
