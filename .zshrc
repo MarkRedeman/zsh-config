@@ -30,7 +30,7 @@ ZSH_CUSTOM=$HOME/.zsh.d/oh-my-zsh/
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git extract fasd node httpie npm composer nyan colored-man-pages)
+plugins=(git extract fasd node httpie npm composer nyan colored-man-pages ctrl-zsh)
 
 # User configuration
 source $ZSH/oh-my-zsh.sh
